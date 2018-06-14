@@ -51,8 +51,61 @@
       border: 0;
     }
 
-    .gallery {}
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 100px);
+      grid-auto-rows: 100px;
+      grid-auto-flow: dense;
+    }
 
+    .item {
+      overflow: hidden;
+      /* make the item a grid as well for layering content */
+      display: grid;
+      /* this give you a 1x1 grid */
+      grid-template-columns: 1;
+      grid-template-rows: 1;
+    }
+
+    .item img {
+      /* spans the whole grid */
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      width: 100%;
+      height: 100%;
+      /* like background-image: cover */
+      object-fit: cover;
+    }
+
+    .item__overlay {
+      /* if you place more than one thing in the same row/column they will overlap each other. Here we are overlapping the overlay on top of our item's image. You can use z-index to determine the order */
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+    }
+
+    .item.v2 {
+      grid-row: span 2;
+    }
+
+    .item.v3 {
+      grid-row: span 3;
+    }
+
+    .item.v4 {
+      grid-row: span 4;
+    }
+
+    .item.h2 {
+      grid-column: span 2;
+    }
+
+    .item.h3 {
+      grid-column: span 3;
+    }
+
+    .item.h4 {
+      grid-column: span 4;
+    }
 
 
     .overlay {
@@ -82,6 +135,33 @@
   </style>
 
   <script>
+    const gallery = document.querySelector('.gallery');
+    const overlay = document.querySelector('.overlay');
+    const overlayImage = overlay.querySelector('img');
+    const overlayClose = overlay.querySelector('.close');
+
+    function generateHTML([h, v]) {
+      return `
+        <div class="item h${h} v${v}">
+          <img src="images/${randomNumber(12)}.jpg"/>
+          <div class="item__overlay">
+            <button>View -></button>
+          </div>
+        </div>
+      `;
+    };
+
+    function randomNumber(limit) {
+      return Math.floor(Math.random() * limit) +1 ;
+    };
+
+    const digits = Array.from({ length: 50 }, () =>
+    [randomNumber(4), randomNumber(4)]).concat([[1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1]]);
+    // console.log(digits);
+
+    const html = digits.map(generateHTML).join('');
+    gallery.innerHTML = html;
+
   </script>
 </body>
 
